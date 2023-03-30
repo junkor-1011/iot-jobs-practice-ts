@@ -5,8 +5,7 @@
     "cdk-app": "bin/cdk-app.js"
   },
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
+    "typecheck": "tsc --noEmit",
     "test": "vitest --run",
     "test:ui": "vitest --ui",
     "cdk": "cdk"
@@ -15,7 +14,6 @@
     "@types/node": "18.15.11",
     "@vitest/ui": "^0.29.8",
     "aws-cdk": "2.72.0",
-    "ts-node": "^10.9.1",
     "typescript": "~5.0.2",
     "vite": "^4.2.1",
     "vitest": "^0.29.8"
