@@ -5,7 +5,7 @@ const { defineConfig } = require('eslint-define-config');
 module.exports = defineConfig({
   root: true,
   env: {
-    es2021: true,
+    es2022: true,
     node: true,
     browser: true,
   },
@@ -14,11 +14,14 @@ module.exports = defineConfig({
     'standard-with-typescript',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'plugin:jest/recommended',
-    'plugin:jest/style',
+    // 'plugin:jest/recommended',
+    // 'plugin:jest/style',
     'prettier',
   ],
-  plugins: ['@typescript-eslint', 'jest'],
+  plugins: [
+    '@typescript-eslint',
+    // 'jest'
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
