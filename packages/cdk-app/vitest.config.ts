@@ -13,6 +13,7 @@ const testConfigBase = {
 const unitTestConfig = {
   ...testConfigBase,
   include: [path.join(__dirname, './test/**/*.(test|spec).ts')],
+  threads: false,
 } satisfies UserConfig['test'];
 
 const testConfig = unitTestConfig satisfies UserConfig['test'];

@@ -56,6 +56,9 @@ importers:
       aws-cdk:
         specifier: 2.72.0
         version: 2.72.0
+      esbuild:
+        specifier: ^0.17.14
+        version: 0.17.14
       typescript:
         specifier: ~5.0.2
         version: 5.0.2
