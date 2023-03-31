@@ -1,6 +1,6 @@
 export interface WrapperFactory<T> {
-  get: () => T;
-  set: <const U>(decorator: (target: T) => U) => WrapperFactory<U>;
+  readonly get: () => T;
+  readonly set: <const U>(decorator: (target: T) => U) => WrapperFactory<U>;
 }
 
 export const createWrapperFactory = <const T>(
