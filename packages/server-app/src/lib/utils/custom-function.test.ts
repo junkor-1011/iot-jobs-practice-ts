@@ -1,8 +1,14 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 
 import { createWrapperFactory } from './custom-function';
 
 describe('createWrapperFactory', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+    vi.resetAllMocks();
+    vi.restoreAllMocks();
+  });
+
   it('create wrapper function(same type: number)', () => {
     const targetFunc = (x: number): number => x * x;
     type TargetFuncType = typeof targetFunc;
@@ -55,6 +61,14 @@ describe('createWrapperFactory', () => {
       return decorated;
     };
 
+    const decoratorWithLog = (target: TargetFuncType): TargetFuncType => {
+      const decorated = (x: string): string => {
+        console.log(x);
+        return x;
+      };
+      return decorated;
+    };
+
     const decoratedFunc1 = createWrapperFactory(targetFunc)
       .set(decorator1)
       .get();
@@ -84,5 +98,17 @@ describe('createWrapperFactory', () => {
       .get();
 
     expect(decoratedFunc4('baz')).toBe('prefix1: (baz) | added');
+
+    global.console.log = vi.fn();
+    const decoratedFunc5 = createWrapperFactory(targetFunc)
+      .set(decoratorWithLog)
+      .set(decorator1)
+      .set(decorator2)
+      .set(decorator3)
+      .get();
+
+    expect(decoratedFunc5('_lol_')).toBe('prefix1: (_lol_) | added');
+    expect(console.log).toHaveBeenCalledTimes(1);
+    expect(console.log).toHaveBeenCalledWith('prefix1: (_lol_) | added');
   });
 });
