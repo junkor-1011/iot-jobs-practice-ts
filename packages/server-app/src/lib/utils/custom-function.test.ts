@@ -20,5 +20,20 @@ describe('createWrapperFactory', () => {
     expect(decoratedFunc1(2)).toBe(16); // (2 * 2)^2
     expect(decoratedFunc1(-1)).toBe(4); // (-1 * 2)^2
     expect(decoratedFunc1(5)).toBe(100); // (5 * 2)^2
+
+    const decorator2 = (target: TargetFuncType): TargetFuncType => {
+      const decorated: TargetFuncType = (x: number) => -1 * target(x);
+      return decorated;
+    };
+
+    const decoratedFunc2 = createWrapperFactory(targetFunc)
+      .set(decorator1)
+      .set(decorator2)
+      .get();
+
+    expect(decoratedFunc2(1)).toBe(-4); // (1 * 2)^2 * (-1)
+    expect(decoratedFunc2(2)).toBe(-16); // (2 * 2)^2 * (-1)
+    expect(decoratedFunc2(-1)).toBe(-4); // (-1 * 2)^2 * (-1)
+    expect(decoratedFunc2(5)).toBe(-100); // (5 * 2)^2 * (-1)
   });
 });
