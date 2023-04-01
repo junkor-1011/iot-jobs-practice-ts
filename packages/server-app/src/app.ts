@@ -1,32 +1,16 @@
-import fastify, {
-  type FastifyInstance,
-  type FastifyServerOptions,
-} from 'fastify';
-import fastifySensible from '@fastify/sensible';
+import { Hono } from 'hono';
+import { logger } from 'hono/logger';
 
-const defaultOption: FastifyServerOptions = {
-  logger: true,
-};
+import { hello } from './modules/hello';
 
-export const build = async (
-  opts: FastifyServerOptions = defaultOption,
-): Promise<FastifyInstance> => {
-  const server = fastify(opts);
+export const app = new Hono();
 
-  await server.register(fastifySensible);
+app.use('*', logger());
 
-  return await server;
-};
+app.get('/', (c) => {
+  return c.json({
+    message: 'Hello, Hono!',
+  });
+});
 
-export const app = async (
-  opts: FastifyServerOptions = defaultOption,
-): Promise<void> => {
-  const server = await build(opts);
-
-  try {
-    console.log('listen port 3000');
-    await server.listen({ port: 3000, host: '0.0.0.0' });
-  } catch (err) {
-    console.log(err);
-  }
-};
+app.route('/hello', hello);
