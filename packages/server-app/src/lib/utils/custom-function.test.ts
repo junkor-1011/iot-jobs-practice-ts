@@ -111,7 +111,7 @@ describe('createWrapperFactory', () => {
     expect(console.log).toHaveBeenCalledTimes(1);
     expect(console.log).toHaveBeenCalledWith('prefix1: (_lol_) | added');
   });
-  it('convert type', () => {
+  it('convert return type', () => {
     const targetFunc = (x: number): number => x;
 
     const decoratorA = <Args extends readonly unknown[], Return>(
@@ -150,5 +150,20 @@ describe('createWrapperFactory', () => {
     expect(console.log).toHaveBeenCalledTimes(2);
     expect(console.log).toHaveBeenCalledWith([3]);
     expect(console.log).toHaveBeenCalledWith('value: 3');
+  });
+  it('add arg', () => {
+    const targetFunc = (name: string): string => `Hello, ${name}.`;
+
+    const decorator = (
+      target: typeof targetFunc,
+    ): ((firstName: string, lastName: string) => string) => {
+      const decorated = (firstName: string, lastName: string): string =>
+        target(`${firstName} ${lastName}`);
+      return decorated;
+    };
+
+    const decoratedFunc = createWrapperFactory(targetFunc).set(decorator).get();
+
+    expect(decoratedFunc('John', 'Smith')).toBe('Hello, John Smith.');
   });
 });
