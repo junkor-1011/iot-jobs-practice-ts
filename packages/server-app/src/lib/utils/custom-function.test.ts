@@ -111,4 +111,44 @@ describe('createWrapperFactory', () => {
     expect(console.log).toHaveBeenCalledTimes(1);
     expect(console.log).toHaveBeenCalledWith('prefix1: (_lol_) | added');
   });
+  it('convert type', () => {
+    const targetFunc = (x: number): number => x;
+
+    const decoratorA = <Args extends readonly unknown[], Return>(
+      target: (...args: Args) => Return,
+    ): ((...args: Args) => Return) => {
+      const decorated = (...args: Args): Return => {
+        console.log(args);
+
+        const ret = target(...args);
+        console.log(ret);
+
+        return ret;
+      };
+      return decorated;
+    };
+
+    const decoratorB = <Args extends readonly unknown[]>(
+      target: (...args: Args) => number,
+    ): ((...args: Args) => string) => {
+      const decorated = (...args: Args): string => {
+        const value = target(...args);
+        return `value: ${value}`;
+      };
+      return decorated;
+    };
+
+    // mock
+    global.console.log = vi.fn();
+
+    const decoratedFunc = createWrapperFactory(targetFunc)
+      .set(decoratorB)
+      .set(decoratorA)
+      .get();
+
+    expect(decoratedFunc(3)).toBe('value: 3');
+    expect(console.log).toHaveBeenCalledTimes(2);
+    expect(console.log).toHaveBeenCalledWith([3]);
+    expect(console.log).toHaveBeenCalledWith('value: 3');
+  });
 });
